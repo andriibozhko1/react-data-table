@@ -1,4 +1,4 @@
-GH-PAGES : https://andriibozhko1.github.io/react-data-table/
+# GH-PAGES : https://andriibozhko1.github.io/react-data-table/
 
 ## Available Scripts
 
