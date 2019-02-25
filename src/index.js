@@ -9,10 +9,11 @@ import "./style/style.scss";
 class DataTable extends Component {
   constructor(props) {
     super(props);
-
+    
     this.allItemsCheckedStatus = false;
 
     this.state = {
+      query: '',
       pagination: [],
       dataItems: [],
       currentPage: [],
@@ -111,28 +112,48 @@ class DataTable extends Component {
       "https://mate-academy.github.io/phone-catalogue-static/phones/phones.json"
     );
     const items = await response.json();
-
+     
     items.map(item => {
       item.isChecked = false;
     })
 
+    const pattern = new RegExp(this.state.query, 'i');
+    let filteredItems;
+    Object.keys(this.state.columnConfig).filter(key => {
+      filteredItems = items.filter((item) => pattern.test(item[key])) 
+    })     
     this.setState({
-      dataItems: items
+      dataItems: filteredItems
     }, () => {
       this.createPagination(this.state.quantityItems);
     });
   }
 
+  sortTable = (key) => {
+    this.setState(prevState => {
+      prevState.dataItems.sort((a,b) => a[key] < b[key] ? -1 : 1);
+      
+      return {
+        prevState
+      }
+    }, () => {
+      this.createPagination(this.state.quantityItems);
+    })
+  }
+
   render() {
     this.checkAll();
-    console.log(this.state)
     return (
       <div className="DataTable">
         <div className="DataTable__header">
           <DropDown changeQuantityItems={quantityItems => {
             this.createPagination(quantityItems);            
           }} />
-          <Filter />
+          <Filter filterItems={(query) => {
+            this.setState({
+              query,
+            }, () => this.getData())
+          }}/>
         </div>
         <div className="DataTable__content">
           <TableList
@@ -142,6 +163,7 @@ class DataTable extends Component {
             selectItems={this.selectItems}
             selectAllItems={this.selectAllItems}
             generalStatusCheckBoxes={this.allItemsCheckedStatus}
+            sortTable={this.sortTable}
           />
         </div>
         <div className="DataTable__footer">         
