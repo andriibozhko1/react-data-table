@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+GH-PAGES : https://andriibozhko1.github.io/react-data-table/
 
 ## Available Scripts
 
